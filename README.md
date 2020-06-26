@@ -1,1 +1,3 @@
 # Advanced_Computer_Programming_Final
+
+這是一個For進階程式設計這門課期末作業的Repo
