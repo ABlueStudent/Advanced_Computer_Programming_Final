@@ -1,3 +1,6 @@
+import pandas
+import time
+
 from playUSpider import *
 from DBInterface import *
 from DataAnalysis import *
@@ -13,4 +16,22 @@ if __name__ == "__main__":
     for item in playU:
         DBInterface.storeContent(item.get('title'), item.get('description'), datetime.strptime(item.get('date'), '%B %d, %Y'), item.get('readtime'))
 
-    print(DBInterface.getContent())
+    # 把東西全都Print到Console上
+
+    # print(DBInterface.getContent()) # SELECT * FROM table_
+
+    # print(DataAnalysis.pandaEatData()) # pandas parsed table_
+
+    # print(DataAnalysis.andlyseReadtime())
+
+    # 來正經的做資料輸出
+
+    pandaEatData = DataAnalysis.pandaEatData()
+    analyseReadTime = DataAnalysis.andlyseReadtime()
+
+    pandaEatData.to_csv("{}.csv".format(time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())))
+    print(pandaEatData)
+
+    print("Readtime Data list: ", analyseReadTime)
+
+    
