@@ -1,6 +1,7 @@
 import pymysql.cursors
 
 class DBInterface():
+    #沒有寫config是我懶惰
     def __init__(self):
         self.host = 'localhost'
         self.user = 'root'
