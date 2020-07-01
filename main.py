@@ -10,6 +10,10 @@ if __name__ == "__main__":
     playU = playUSpider()
     playU = playU.contentList()
     DBInterface = DBInterface()
+
+    # 補上忘記跑的檢查資料庫的部分
+    DBInterface.check_db_and_table()
+
     DataAnalysis = DataAnalysis()
 
     # get something on PlayU and put into DataPack. by.可愛的下畫線亞裔黑白相間的熊
