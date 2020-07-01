@@ -1,19 +1,16 @@
 from playUSpider import *
 from DBInterface import *
+from DataAnalysis import *
+from datetime import datetime
 
 if __name__ == "__main__":
-    # playU = playUSpider()
-    # print(playU.contentList())
-    
-    # DBInterface = DBInterface()
-    # print(DBInterface.storeContent('Good Morning!', 'Just OwO 而已', '2020/06/29', '0 min'))
-    # DBInterface.close()
-
     playU = playUSpider()
     playU = playU.contentList()
     DBInterface = DBInterface()
+    DataAnalysis = DataAnalysis()
 
+    # get something on PlayU and put into DataPack. by.可愛的下畫線亞裔黑白相間的熊
     for item in playU:
-        DBInterface.storeContent(item.get('title'), item.get('description'), item.get('date'), item.get('readtime'))
+        DBInterface.storeContent(item.get('title'), item.get('description'), datetime.strptime(item.get('date'), '%B %d, %Y'), item.get('readtime'))
 
-    
+    print(DBInterface.getContent())

@@ -37,7 +37,7 @@ class DBInterface():
                 cursor.execute('SHOW TABLES;')
                 if len(list(filter(lambda table: table.get('Tables_in_{}'.format(self.db_name)) == self.table_name, cursor.fetchall()))) < 1:
                     cursor.execute(
-                        'CREATE TABLE {} (ID INT AUTO_INCREMENT NOT NULL PRIMARY KEY, Title TEXT NOT NULL, Description TEXT , Date TEXT , ReadTime TEXT);'.format(self.table_name))
+                        'CREATE TABLE {} (Title VARCHAR(256) NOT NULL, Description TEXT , Date TEXT , ReadTime TEXT, PRIMARY KEY (Title));'.format(self.table_name))
                     print('created table ', self.table_name)
 
                 cursor.execute('SHOW TABLES;')
@@ -48,7 +48,6 @@ class DBInterface():
             return False
 
         finally:
-            # self.connect.close()
             self.checked = True
 
     def storeContent(self, Title, Description, Date, ReadTime):
@@ -58,7 +57,7 @@ class DBInterface():
         try:
             with self.connect.cursor() as cursor:
                 cursor.execute('USE {};'.format(self.db_name))
-                cursor.execute('INSERT INTO {} (Title, Description, Date, ReadTime) VALUES(%s, %s, %s, %s);'.format(self.table_name), (Title, Description, Date, ReadTime))
+                cursor.execute('INSERT INTO {} (Title, Description, Date, ReadTime) VALUES(%s, %s, %s, %s) ON DUPLICATE KEY UPDATE Description = %s, Date = %s, ReadTime = %s;'.format(self.table_name), (Title, Description, Date, ReadTime, Description, Date, ReadTime))
                 
             return True
 
@@ -68,7 +67,19 @@ class DBInterface():
             self.connect.commit()
         
     def getContent(self):
-        pass
+        if self.checked == False:
+            self.check_db_and_table()
+
+        try:
+            with self.connect.cursor() as cursor:
+                cursor.execute('USE {};'.format(self.db_name))
+                cursor.execute('SELECT * FROM {};'.format(self.table_name))
+                result = cursor.fetchall()
+
+                return result
+
+        except:
+            return False
 
     def close(self):
         self.connect.commit()
